@@ -1,4 +1,4 @@
-from pygraphblas import Matrix, types, descriptor
+from pygraphblas import Matrix, types, descriptor, Vector
 from typing import List
 
 __all__ = ["bfs"]
@@ -25,33 +25,22 @@ def bfs(adjacency_matrix: Matrix, start_vertex: int) -> List[int]:
 
     _check_conditions(adjacency_matrix, start_vertex)
 
-    res_matrix = Matrix.dense(
-        types.INT64, nrows=1, ncols=adjacency_matrix.ncols, fill=-1
-    )
-    curr_front = Matrix.sparse(types.BOOL, nrows=1, ncols=adjacency_matrix.ncols)
-    was_mask = Matrix.sparse(types.BOOL, nrows=1, ncols=adjacency_matrix.ncols)
+    res_vector = Vector.sparse(types.INT64, size=adjacency_matrix.ncols)
+    curr_front = Vector.sparse(types.BOOL, size=adjacency_matrix.ncols)
 
-    res_matrix[0, start_vertex] = 0
-    curr_front[0, start_vertex] = True
-    was_mask[0, start_vertex] = True
+    res_vector[start_vertex] = 0
+    curr_front[start_vertex] = True
 
     step_number = 1
-    prev_vals_number = -1
-    while prev_vals_number != was_mask.nvals:
-        prev_vals_number = was_mask.nvals
-        curr_front.mxm(
-            adjacency_matrix, mask=was_mask, out=curr_front, desc=descriptor.RC
+    while curr_front.nvals != 0:
+        curr_front.vxm(
+            adjacency_matrix, mask=res_vector.S, out=curr_front, desc=descriptor.RC
         )
-        was_mask.eadd(
-            curr_front,
-            curr_front.type.lxor_monoid,
-            out=was_mask,
-            desc=descriptor.R,
-        )
-        res_matrix.assign_scalar(step_number, mask=curr_front)
+        res_vector.assign_scalar(step_number, mask=curr_front)
         step_number += 1
 
-    return list(res_matrix[0].vals)
+    res_vector.assign_scalar(-1, mask=res_vector.S, desc=descriptor.C)
+    return list(res_vector.vals)
 
 
 def _check_conditions(adjacency_matrix: Matrix, start_vertex: int):

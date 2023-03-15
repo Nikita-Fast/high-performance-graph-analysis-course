@@ -3,6 +3,8 @@ import pytest
 
 from project import bfs
 
+# from tests.utils import read_data_from_json, create_matrix_from_two_lists
+
 
 @pytest.fixture(params=[pgb.INT64, pgb.INT32, pgb.FC64, pgb.UINT8])
 def pgb_types(request):
@@ -68,3 +70,24 @@ def test_wrong_start_vertex():
 def test_bfs(I, J, V, size, start_vertex, expected):
     adjacency_matrix = pgb.Matrix.from_lists(I, J, V, nrows=size, ncols=size)
     assert bfs(adjacency_matrix, start_vertex) == expected
+
+
+# @pytest.mark.parametrize(
+#     "adj_m, start, expected",
+#     read_data_from_json(
+#         "test_bfs",
+#         lambda data: (
+#             create_matrix_from_two_lists(
+#                 I=data["I"],
+#                 J=data["J"],
+#                 V=data["V"],
+#                 size=data["size"],
+#             ),
+#             data["start"],
+#             data["expected"],
+#         ),
+#     ),
+# )
+# def test_bfs_method(adj_m, start, expected):
+#     actual = bfs(adj_m, start)
+#     assert actual == expected
