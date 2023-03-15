@@ -3,7 +3,7 @@ import pytest
 
 from project import bfs
 
-# from tests.utils import read_data_from_json, create_matrix_from_two_lists
+from tests.utils import read_data_from_json, create_matrix_from_two_lists
 
 
 @pytest.fixture(params=[pgb.INT64, pgb.INT32, pgb.FC64, pgb.UINT8])
@@ -29,49 +29,6 @@ def test_wrong_start_vertex():
         bfs(adjacency_matrix, -1)
 
 
-@pytest.mark.parametrize(
-    "I, J, V, size, start_vertex, expected",
-    [
-        (
-            [0, 1, 2, 3],
-            [1, 2, 3, 4],
-            [True, True, True, True],
-            5,
-            0,
-            [0, 1, 2, 3, 4],
-        ),
-        ([0], [1], [False], 5, 0, [0, -1, -1, -1, -1]),
-        (
-            [0, 0, 2, 3, 4],
-            [1, 2, 1, 4, 3],
-            [True, True, True, True, True],
-            5,
-            0,
-            [0, 1, 1, -1, -1],
-        ),
-        (
-            [0, 0, 2, 3, 4],
-            [1, 2, 1, 4, 3],
-            [False, True, True, True, True],
-            5,
-            0,
-            [0, 2, 1, -1, -1],
-        ),
-        (
-            [0, 0, 2, 3, 4],
-            [1, 2, 1, 4, 3],
-            [True, True, True, True, True],
-            5,
-            3,
-            [-1, -1, -1, 0, 1],
-        ),
-    ],
-)
-def test_bfs(I, J, V, size, start_vertex, expected):
-    adjacency_matrix = pgb.Matrix.from_lists(I, J, V, nrows=size, ncols=size)
-    assert bfs(adjacency_matrix, start_vertex) == expected
-
-
 # @pytest.mark.parametrize(
 #     "adj_m, start, expected",
 #     read_data_from_json(
@@ -88,6 +45,27 @@ def test_bfs(I, J, V, size, start_vertex, expected):
 #         ),
 #     ),
 # )
-# def test_bfs_method(adj_m, start, expected):
+# def test_bfs_method(adj_m: pgb.Matrix, start: int, expected):
 #     actual = bfs(adj_m, start)
 #     assert actual == expected
+
+
+@pytest.mark.parametrize(
+    "I, J, V, size, start, expected",
+    read_data_from_json(
+        "test_bfs",
+        lambda data: (
+            data["I"],
+            data["J"],
+            data["V"],
+            data["size"],
+            data["start"],
+            data["expected"],
+        ),
+    ),
+)
+def test_bfs_method(I, J, V, size, start, expected):
+    print("test_bfs_method")
+    adj_m = create_matrix_from_two_lists(I, J, V, size)
+    actual = bfs(adj_m, start)
+    assert actual == expected
