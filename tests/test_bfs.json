@@ -1,0 +1,44 @@
+{
+  "test_bfs": [
+    {
+      "I": [0, 1, 2, 3],
+      "J": [1, 2, 3, 4],
+      "V": [true, true, true, true],
+      "size": 5,
+      "start": 0,
+      "expected": [0, 1, 2, 3, 4]
+    },
+    {
+      "I": [0],
+      "J": [1],
+      "V": [false],
+      "size": 5,
+      "start": 0,
+      "expected": [0, -1, -1, -1, -1]
+    },
+    {
+      "I": [0, 0, 2, 3, 4],
+      "J": [1, 2, 1, 4, 3],
+      "V": [true, true, true, true, true],
+      "size": 5,
+      "start": 0,
+      "expected": [0, 1, 1, -1, -1]
+    },
+    {
+      "I": [0, 0, 2, 3, 4],
+      "J": [1, 2, 1, 4, 3],
+      "V": [false, true, true, true, true],
+      "size": 5,
+      "start": 0,
+      "expected": [0, 2, 1, -1, -1]
+    },
+    {
+      "I": [0, 0, 2, 3, 4],
+      "J": [1, 2, 1, 4, 3],
+      "V": [true, true, true, true, true],
+      "size": 5,
+      "start": 3,
+      "expected": [-1, -1, -1, 0, 1]
+    }
+  ]
+}
