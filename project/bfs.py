@@ -1,6 +1,6 @@
 # from pygraphblas import Matrix, types, descriptor, Vector
 import pygraphblas as pgb
-from typing import List
+from typing import List, Collection, Tuple
 
 __all__ = ["bfs"]
 
@@ -24,7 +24,7 @@ def bfs(adjacency_matrix: pgb.Matrix, start_vertex: int) -> List[int]:
         Если вершина недостижима, то будет установлено значение -1.
     """
 
-    _check_conditions(adjacency_matrix, start_vertex)
+    _check_conditions_bfs(adjacency_matrix, start_vertex)
 
     res_vector = pgb.Vector.sparse(pgb.types.INT64, size=adjacency_matrix.ncols)
     curr_front = pgb.Vector.sparse(pgb.types.BOOL, size=adjacency_matrix.ncols)
@@ -44,7 +44,7 @@ def bfs(adjacency_matrix: pgb.Matrix, start_vertex: int) -> List[int]:
     return list(res_vector.vals)
 
 
-def _check_conditions(adjacency_matrix: pgb.Matrix, start_vertex: int):
+def _check_conditions_bfs(adjacency_matrix: pgb.Matrix, start_vertex: int):
     """
     Проверяет, что матрица смежности графа квадратная,
     сама матрица булева,
