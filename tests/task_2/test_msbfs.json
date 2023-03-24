@@ -1,0 +1,72 @@
+{
+  "test_msbfs": [
+    {
+      "I": [0, 0, 1, 1, 2],
+      "J": [1, 3, 2, 3, 1],
+      "V": [true, true, true, true, true],
+      "size": 4,
+      "start_vertices": [0],
+      "expected": [
+        {
+          "start_vertex": 0,
+          "parents": [-1, 0, 1, 0]
+        }
+      ]
+    },
+    {
+      "I": [0, 0, 1, 1, 2],
+      "J": [1, 3, 2, 3, 1],
+      "V": [true, true, true, true, true],
+      "size": 4,
+      "start_vertices": [3],
+      "expected": [
+        {
+          "start_vertex": 3,
+          "parents": [-2, -2, -2, -1]
+        }
+      ]
+    },
+    {
+      "I": [0, 0, 1, 1, 2],
+      "J": [1, 3, 2, 3, 1],
+      "V": [true, true, true, true, true],
+      "size": 4,
+      "start_vertices": [0, 1],
+      "expected": [
+        {
+          "start_vertex": 0,
+          "parents": [-1, 0, 1, 0]
+        },
+        {
+          "start_vertex": 1,
+          "parents": [-2, -1, 1, 1]
+        }
+      ]
+    },
+    {
+      "I": [0, 0, 1, 1, 2],
+      "J": [1, 3, 2, 3, 1],
+      "V": [true, true, true, true, true],
+      "size": 4,
+      "start_vertices": [0, 1, 2, 3],
+      "expected": [
+        {
+          "start_vertex": 0,
+          "parents": [-1, 0, 1, 0]
+        },
+        {
+          "start_vertex": 1,
+          "parents": [-2, -1, 1, 1]
+        },
+        {
+          "start_vertex": 2,
+          "parents": [-2, 2, -1, 1]
+        },
+        {
+          "start_vertex": 3,
+          "parents": [-2, -2, -2, -1]
+        }
+      ]
+    }
+  ]
+}
