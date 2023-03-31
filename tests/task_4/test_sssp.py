@@ -28,3 +28,21 @@ def test_bellman_ford(I, J, V, size: int, start_vertex: int, expected: List[int]
     adj_m = create_matrix_from_two_lists(I, J, V, size)
     actual = bellman_ford(adj_m, start_vertex)
     assert actual == expected
+
+
+@pytest.mark.parametrize(
+    "I, J, V, size",
+    read_data_from_json(
+        "test_sssp_neg_cycle",
+        lambda data: (
+            data["I"],
+            data["J"],
+            data["V"],
+            data["size"],
+        ),
+    ),
+)
+def test_bellman_ford_neg_cycle(I, J, V, size: int):
+    adj_m = create_matrix_from_two_lists(I, J, V, size)
+    with pytest.raises(ValueError):
+        bellman_ford(adj_m, start_vertex=0)
