@@ -1,5 +1,5 @@
 {
-  "test_sssp_neg_cycle": [
+  "test_neg_cycle": [
     {
       "I": [0,1,2,3],
       "J": [1,2,3,0],

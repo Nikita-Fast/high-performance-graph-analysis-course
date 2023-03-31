@@ -1,3 +1,4 @@
+from project.apsp import floyd_warshall
 from typing import List
 
 import pytest
@@ -6,26 +7,24 @@ from tests.utils import (
     read_data_from_json,
     create_matrix_from_two_lists,
 )
-from project.sssp import bellman_ford
 
 
 @pytest.mark.parametrize(
-    "I, J, V, size, start_vertex, expected",
+    "I, J, V, size, expected",
     read_data_from_json(
-        "test_sssp",
+        "test_apsp",
         lambda data: (
             data["I"],
             data["J"],
             data["V"],
             data["size"],
-            data["start_vertex"],
-            data["expected"],
+            [(d["vertex"], d["dists"]) for d in data["expected"]],
         ),
     ),
 )
-def test_bellman_ford(I, J, V, size: int, start_vertex: int, expected: List[int]):
-    adj_m = create_matrix_from_two_lists(I, J, V, size)
-    actual = bellman_ford(adj_m, start_vertex)
+def test_apsp(I, J, V, size, expected):
+    adj_matrix = create_matrix_from_two_lists(I, J, V, size)
+    actual = floyd_warshall(adj_matrix)
     assert actual == expected
 
 
@@ -41,7 +40,7 @@ def test_bellman_ford(I, J, V, size: int, start_vertex: int, expected: List[int]
         ),
     ),
 )
-def test_bellman_ford_neg_cycle(I, J, V, size: int):
+def test_apsp_neg_cycle(I, J, V, size):
     adj_m = create_matrix_from_two_lists(I, J, V, size)
     with pytest.raises(ValueError):
-        bellman_ford(adj_m, start_vertex=0)
+        floyd_warshall(adj_m)

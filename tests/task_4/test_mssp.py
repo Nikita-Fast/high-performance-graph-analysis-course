@@ -6,26 +6,26 @@ from tests.utils import (
     read_data_from_json,
     create_matrix_from_two_lists,
 )
-from project.sssp import bellman_ford
+from project.mssp import mssp
 
 
 @pytest.mark.parametrize(
-    "I, J, V, size, start_vertex, expected",
+    "I, J, V, size, start_vertices, expected",
     read_data_from_json(
-        "test_sssp",
+        "test_mssp",
         lambda data: (
             data["I"],
             data["J"],
             data["V"],
             data["size"],
-            data["start_vertex"],
-            data["expected"],
+            data["start_vertices"],
+            [(d["vertex"], d["dists"]) for d in data["expected"]],
         ),
     ),
 )
-def test_bellman_ford(I, J, V, size: int, start_vertex: int, expected: List[int]):
-    adj_m = create_matrix_from_two_lists(I, J, V, size)
-    actual = bellman_ford(adj_m, start_vertex)
+def test_mssp(I, J, V, size, start_vertices, expected):
+    adj_matrix = create_matrix_from_two_lists(I, J, V, size)
+    actual = mssp(adj_matrix, start_vertices)
     assert actual == expected
 
 
@@ -41,7 +41,7 @@ def test_bellman_ford(I, J, V, size: int, start_vertex: int, expected: List[int]
         ),
     ),
 )
-def test_bellman_ford_neg_cycle(I, J, V, size: int):
+def test_mssp_neg_cycle(I, J, V, size):
     adj_m = create_matrix_from_two_lists(I, J, V, size)
     with pytest.raises(ValueError):
-        bellman_ford(adj_m, start_vertex=0)
+        mssp(adj_m, [0, 1])

@@ -15,7 +15,7 @@ def bellman_ford(adj_matrix: pgb.Matrix, start_vertex: int):
     Raises
     ------
     ValueError
-        Если в графе есть циклы с отрицательным весом
+        Если в графе есть цикл с отрицательным весом
 
     Returns
     -------
