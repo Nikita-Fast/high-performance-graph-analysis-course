@@ -44,7 +44,13 @@ def floyd_warshall(adj_matrix: pgb.Matrix) -> List[Tuple[int, List[int]]]:
             raise ValueError("В графе есть цикл с отрицательным весом")
 
     return [
-        (i, [adj_matrix.get(i, j, default=-1) for j in range(adj_matrix.ncols)])
+        (
+            i,
+            [
+                adj_matrix.get(i, j, default=float("inf"))
+                for j in range(adj_matrix.ncols)
+            ],
+        )
         for i in range(adj_matrix.nrows)
     ]
 

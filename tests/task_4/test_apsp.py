@@ -18,7 +18,7 @@ from tests.utils import (
             data["J"],
             data["V"],
             data["size"],
-            [(d["vertex"], d["dists"]) for d in data["expected"]],
+            [(d["vertex"], [float(x) for x in d["dists"]]) for d in data["expected"]],
         ),
     ),
 )

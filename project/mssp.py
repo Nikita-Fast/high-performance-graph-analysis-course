@@ -48,7 +48,7 @@ def mssp(
             (
                 i,
                 [
-                    d.get(start_vertex_to_row_number[i], j, default=-1)
+                    d.get(start_vertex_to_row_number[i], j, default=float("inf"))
                     for j in range(d.ncols)
                 ],
             )

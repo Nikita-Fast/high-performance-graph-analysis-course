@@ -35,7 +35,7 @@ def bellman_ford(adj_matrix: pgb.Matrix, start_vertex: int):
     if d.isne(d.vxm(adj_matrix, semiring=pgb.semiring.MIN_PLUS_FP64)):
         raise ValueError("В графе есть циклы отрицательного веса!")
     else:
-        return [d.get(i, default=-1) for i in range(adj_matrix.ncols)]
+        return [d.get(i, default=float("inf")) for i in range(adj_matrix.ncols)]
 
 
 def _prepare_matrix(adj_matrix: pgb.Matrix):

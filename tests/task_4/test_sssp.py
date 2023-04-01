@@ -19,11 +19,11 @@ from project.sssp import bellman_ford
             data["V"],
             data["size"],
             data["start_vertex"],
-            data["expected"],
+            [float(x) for x in data["expected"]],
         ),
     ),
 )
-def test_bellman_ford(I, J, V, size: int, start_vertex: int, expected: List[int]):
+def test_bellman_ford(I, J, V, size: int, start_vertex: int, expected: List[float]):
     adj_m = create_matrix_from_two_lists(I, J, V, size)
     actual = bellman_ford(adj_m, start_vertex)
     assert actual == expected

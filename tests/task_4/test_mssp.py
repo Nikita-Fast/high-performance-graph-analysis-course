@@ -19,7 +19,7 @@ from project.mssp import mssp
             data["V"],
             data["size"],
             data["start_vertices"],
-            [(d["vertex"], d["dists"]) for d in data["expected"]],
+            [(d["vertex"], [float(x) for x in d["dists"]]) for d in data["expected"]],
         ),
     ),
 )
