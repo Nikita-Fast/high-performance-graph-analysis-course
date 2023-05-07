@@ -69,10 +69,8 @@ def test_dynamic():
                 u, v = add_edges.pop()
                 dynamic_sssp.add_edge(u, v)
 
-            dynamic_sssp.update()
             expected = dijkstra(modifiable_graph, 0)
-
-            assert dynamic_sssp.d == expected
+            assert dynamic_sssp.get_distances() == expected
 
 
 def test_dynamic_decremental():
@@ -86,10 +84,9 @@ def test_dynamic_decremental():
             del edges[i]
 
             dynamic_sssp.add_edge(u, v)
-            dynamic_sssp.update()
-            expected = dijkstra(modifiable_graph, 0)
 
-            assert dynamic_sssp.d == expected
+            expected = dijkstra(modifiable_graph, 0)
+            assert dynamic_sssp.get_distances() == expected
 
 
 def test_dynamic_incremental():
@@ -103,7 +100,5 @@ def test_dynamic_incremental():
         for u, v in g1.edges:
             dynamic_sssp.add_edge(u, v)
 
-            dynamic_sssp.update()
             expected = dijkstra(modifiable_graph, 0)
-
-            assert dynamic_sssp.d == expected
+            assert dynamic_sssp.get_distances() == expected

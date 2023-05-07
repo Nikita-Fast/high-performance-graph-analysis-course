@@ -31,58 +31,62 @@ def dijkstra(graph: nx.DiGraph, start_vertex) -> List:
 
 class DynamicSSSP:
     def __init__(self, graph: nx.DiGraph, start_vertex: int):
-        self.graph: nx.DiGraph = graph
-        self.start_vertex = start_vertex
-        self.modified_vertices = set()
-        self.d = dijkstra(graph, start_vertex)
+        self._graph: nx.DiGraph = graph
+        self._start_vertex = start_vertex
+        self._modified_vertices = set()
+        self._d = dijkstra(graph, start_vertex)
 
-    def update(self):
+    def get_distances(self) -> List[int]:
+        self._update()
+        return self._d
+
+    def _update(self):
         heap = HeapPriorityQueue(priority_key=lambda x: x)
         rhs = {}
-        for u in self.modified_vertices:
-            rhs[u] = self.compute_rhs(u)
-            if rhs[u] != self.d[u]:
-                key = min(rhs[u], self.d[u])
+        for u in self._modified_vertices:
+            rhs[u] = self._compute_rhs(u)
+            if rhs[u] != self._d[u]:
+                key = min(rhs[u], self._d[u])
                 heap.add(u, key)
 
         while heap:
             u = heap.pop()
-            if rhs[u] < self.d[u]:
-                self.d[u] = rhs[u]
-                for v in self.graph.successors(u):
-                    rhs[v] = self.compute_rhs(v)
-                    if rhs[v] != self.d[v]:
-                        key = min(rhs[v], self.d[v])
+            if rhs[u] < self._d[u]:
+                self._d[u] = rhs[u]
+                for v in self._graph.successors(u):
+                    rhs[v] = self._compute_rhs(v)
+                    if rhs[v] != self._d[v]:
+                        key = min(rhs[v], self._d[v])
                         heap.add(v, key)
                     else:
                         if v in heap._entry_map:
                             heap.remove(v)
             else:
-                self.d[u] = float("inf")
-                for v in itertools.chain(self.graph.successors(u), [u]):
-                    rhs[v] = self.compute_rhs(v)
-                    if rhs[v] != self.d[v]:
-                        key = min(rhs[v], self.d[v])
+                self._d[u] = float("inf")
+                for v in itertools.chain(self._graph.successors(u), [u]):
+                    rhs[v] = self._compute_rhs(v)
+                    if rhs[v] != self._d[v]:
+                        key = min(rhs[v], self._d[v])
                         heap.add(v, key)
                     else:
                         if v in heap._entry_map:
                             heap.remove(v)
 
     def remove_edge(self, u, v):
-        self.graph.remove_edge(u, v)
-        self.modified_vertices.add(v)
+        self._graph.remove_edge(u, v)
+        self._modified_vertices.add(v)
 
     def add_edge(self, u, v):
-        self.graph.add_edge(u, v)
-        self.modified_vertices.add(v)
+        self._graph.add_edge(u, v)
+        self._modified_vertices.add(v)
 
-    def compute_rhs(self, v):
-        if v == self.start_vertex:
+    def _compute_rhs(self, v):
+        if v == self._start_vertex:
             return 0
         else:
             return (
                 min(
-                    (self.d[u] for u in self.graph.predecessors(v)),
+                    (self._d[u] for u in self._graph.predecessors(v)),
                     default=float("inf"),
                 )
                 + 1
