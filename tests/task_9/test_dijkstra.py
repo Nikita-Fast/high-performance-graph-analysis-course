@@ -14,16 +14,16 @@ def test_dijkstra():
     g.add_edge(3, 1)
     g.add_edge(2, 0)
     actual = dijkstra(g, 0)
-    assert actual == [0, 1, float("inf"), 2]
+    assert actual == {0: 0, 1: 1, 2: float("inf"), 3: 2}
 
     actual = dijkstra(g, 1)
-    assert actual == [float("inf"), 0, float("inf"), 1]
+    assert actual == {0: float("inf"), 1: 0, 2: float("inf"), 3: 1}
 
     actual = dijkstra(g, 2)
-    assert actual == [1, 2, 0, 3]
+    assert actual == {0: 1, 1: 2, 2: 0, 3: 3}
 
     actual = dijkstra(g, 3)
-    assert actual == [float("inf"), 1, float("inf"), 0]
+    assert actual == {0: float("inf"), 1: 1, 2: float("inf"), 3: 0}
 
     # тест с использованием ранее реализованного алгоритма bellman_ford
     for i in range(1, 500):
@@ -31,13 +31,14 @@ def test_dijkstra():
         adj_matrix = Matrix.from_scipy_sparse(nx.adjacency_matrix(g))
         for s in g.nodes:
             actual = dijkstra(g, s)
-            expected = bellman_ford(adj_matrix, s)
+            expected = {v: d for v, d in enumerate(bellman_ford(adj_matrix, s))}
             assert actual == expected
 
 
 def test_dynamic():
     for i in range(1, 500):
         modifiable_graph: nx.DiGraph = nx.DiGraph(nx.generators.atlas.graph_atlas(i))
+        # modifiable_graph = nx.DiGraph(nx.generators.social.les_miserables_graph())
 
         edges = list(modifiable_graph.edges)
         del_edges_num = len(edges) // 2
@@ -55,7 +56,7 @@ def test_dynamic():
         # select edges that will be deleted from graph during test and fix their future deletion order
         del_edges = list(modifiable_graph.edges)
         # initialize distances for dynamic algorithm
-        dynamic_sssp = DynamicSSSP(modifiable_graph, 0)
+        dynamic_sssp = DynamicSSSP(modifiable_graph, list(modifiable_graph.nodes)[0])
 
         while add_edges or del_edges:
             # add or delete edges in arbitrary order
@@ -69,7 +70,7 @@ def test_dynamic():
                 u, v = add_edges.pop()
                 dynamic_sssp.add_edge(u, v)
 
-            expected = dijkstra(modifiable_graph, 0)
+            expected = dijkstra(modifiable_graph, list(modifiable_graph.nodes)[0])
             assert dynamic_sssp.get_distances() == expected
 
 

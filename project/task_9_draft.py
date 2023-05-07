@@ -1,23 +1,23 @@
 import itertools
-from typing import List
+from typing import List, Dict, Hashable
 import networkx as nx
 from boltons.queueutils import HeapPriorityQueue
 
 
-def dijkstra(graph: nx.DiGraph, start_vertex) -> List:
+def dijkstra(graph: nx.DiGraph, start_vertex) -> Dict[Hashable, int]:
     if graph.number_of_nodes() == 0:
         raise Exception("Передан граф без вершин")
-    if start_vertex >= graph.number_of_nodes():
-        raise Exception("Неверно указан индекс стартовой вершины")
+    if start_vertex not in graph.nodes:
+        raise Exception("Неверно указана стартовая вершина")
 
-    d = [float("inf")] * graph.number_of_nodes()
+    d = {v: float("inf") for v in graph.nodes}
     d[start_vertex] = 0
-    visited = [False] * graph.number_of_nodes()
+    visited = {v: False for v in graph.nodes}
 
-    while not all(visited):
+    while not all(visited.values()):
         # из ещё не посещённых вершин выбирается вершина u, имеющая минимальную метку.
-        not_visited = [i for i, is_visited in enumerate(visited) if not is_visited]
-        u = min([(i, d[i]) for i in not_visited], key=lambda x: x[1])[0]
+        not_visited = [v for v, is_visited in visited.items() if not is_visited]
+        u = min([(v, d[v]) for v in not_visited], key=lambda x: x[1])[0]
         # рассматриваем всевозможные маршруты, в которых u является предпоследним пунктом.
         for v in graph.successors(u):
             if not visited[v]:
@@ -40,7 +40,7 @@ class DynamicSSSP:
         self._modified_vertices = set()
         self._d = dijkstra(graph, start_vertex)
 
-    def get_distances(self) -> List[int]:
+    def get_distances(self) -> Dict[Hashable, int]:
         self._update()
         return self._d
 
