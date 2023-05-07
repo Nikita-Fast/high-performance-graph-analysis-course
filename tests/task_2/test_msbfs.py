@@ -1,7 +1,7 @@
 import pygraphblas as pgb
 import pytest
 
-from project import msbfs
+from project.msbfs import msbfs
 
 from tests.utils import read_data_from_json, create_matrix_from_two_lists
 
