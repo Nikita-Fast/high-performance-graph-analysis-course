@@ -30,6 +30,10 @@ def dijkstra(graph: nx.DiGraph, start_vertex) -> List:
 
 
 class DynamicSSSP:
+    # Алгоритм взят из статьи
+    # An Incremental Algorithm for a Generalization of the Shortest-Path Problem
+    # G. Ramalingam† and Thomas Reps‡
+
     def __init__(self, graph: nx.DiGraph, start_vertex: int):
         self._graph: nx.DiGraph = graph
         self._start_vertex = start_vertex
