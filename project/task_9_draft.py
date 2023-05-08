@@ -1,3 +1,4 @@
+import heapq
 import itertools
 from typing import List, Dict, Hashable
 import networkx as nx
@@ -12,20 +13,17 @@ def dijkstra(graph: nx.DiGraph, start_vertex) -> Dict[Hashable, int]:
 
     d = {v: float("inf") for v in graph.nodes}
     d[start_vertex] = 0
-    visited = {v: False for v in graph.nodes}
+    q = [(0, start_vertex)]
 
-    while not all(visited.values()):
+    while q:
         # из ещё не посещённых вершин выбирается вершина u, имеющая минимальную метку.
-        not_visited = [v for v, is_visited in visited.items() if not is_visited]
-        u = min([(v, d[v]) for v in not_visited], key=lambda x: x[1])[0]
+        distance, u = heapq.heappop(q)
         # рассматриваем всевозможные маршруты, в которых u является предпоследним пунктом.
         for v in graph.successors(u):
-            if not visited[v]:
-                # +1 т.к. граф не взвешенный
-                if d[u] + 1 < d[v]:
-                    d[v] = d[u] + 1
-        visited[u] = True
-
+            # +1 т.к. граф не взвешенный
+            if d[u] + 1 < d[v]:
+                d[v] = d[u] + 1
+                heapq.heappush(q, (d[v], v))
     return d
 
 
