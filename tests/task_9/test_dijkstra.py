@@ -25,7 +25,7 @@ def test_dijkstra():
     actual = dijkstra(g, 3)
     assert actual == {0: float("inf"), 1: 1, 2: float("inf"), 3: 0}
 
-    # тест с использованием ранее реализованного алгоритма bellman_ford
+    # тест с использованием ранее реализованного и протестированного алгоритма bellman_ford
     for i in range(1, 500):
         g = nx.to_directed(nx.generators.atlas.graph_atlas(i))
         adj_matrix = Matrix.from_scipy_sparse(nx.adjacency_matrix(g))
@@ -38,7 +38,6 @@ def test_dijkstra():
 def test_dynamic():
     for i in range(1, 500):
         modifiable_graph: nx.DiGraph = nx.DiGraph(nx.generators.atlas.graph_atlas(i))
-        # modifiable_graph = nx.DiGraph(nx.generators.social.les_miserables_graph())
 
         edges = list(modifiable_graph.edges)
         del_edges_num = len(edges) // 2
@@ -77,16 +76,18 @@ def test_dynamic():
 def test_dynamic_decremental():
     for i in range(1, 500):
         modifiable_graph: nx.DiGraph = nx.DiGraph(nx.generators.atlas.graph_atlas(i))
-        dynamic_sssp = DynamicSSSP(modifiable_graph, 0)
+
+        start_vertex = list(modifiable_graph)[0]
+        dynamic_sssp = DynamicSSSP(modifiable_graph, start_vertex)
         edges = list(modifiable_graph.edges)
         while edges:
             i = random.randint(0, len(edges) - 1)
             u, v = edges[i]
             del edges[i]
 
-            dynamic_sssp.add_edge(u, v)
+            dynamic_sssp.remove_edge(u, v)
 
-            expected = dijkstra(modifiable_graph, 0)
+            expected = dijkstra(modifiable_graph, start_vertex)
             assert dynamic_sssp.get_distances() == expected
 
 

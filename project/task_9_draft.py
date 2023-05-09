@@ -1,6 +1,6 @@
 import heapq
 import itertools
-from typing import List, Dict, Hashable
+from typing import Dict, Hashable
 import networkx as nx
 from boltons.queueutils import HeapPriorityQueue
 
